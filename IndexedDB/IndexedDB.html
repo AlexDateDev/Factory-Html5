@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>IndexedDB</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+        <style type="text/css">
+            #zonadatos{
+                width:300px;
+                height: 300px;
+                border: 1px solid red;
+            }
+        </style>
+        <script type="text/javascript">
+            var oDB = null;
+            function Init(){
+                var btnGuardar = document.getElementById("Guardar");
+                btnGuardar.addEventListener("click", fnAgregarObjeto, false);
+                // Creamos la DB 
+                var Solicitud = indexedDB.open("MyDB");
+                
+                Solicitud.onsuccess = function(e){
+                    // Si todo ha ido bien, obtengo la base de datos
+                    oDB = e.target.result;
+                }
+                // Creamso los almacenes de objetos en la base de datos
+                Solicitud.onupgradeneeded = function(e){
+                    oDB = e.target.result; // puede que onupgradeneeded se ejecute antes que onsuccess
+                    var columnaClave = {keyPath:"clave"};
+                    oDB.createObjectStore("Gente",columnaClave );
+                }
+            }
+            function ClearInputs(){
+                document.getElementById("clave").value="";
+                document.getElementById("texto").value="";
+                document.getElementById("fecha").value="";
+                
+            }
+            function fnAgregarObjeto(){
+                var inpClave = document.getElementById("clave");
+                var inpTexto = document.getElementById("texto");
+                var inpFecha = document.getElementById("fecha");
+                
+                // Iniciamos una trasnaccion
+                var transaccionDB = oDB.transaction( "Gente", "readwrite");
+                var almacenGente = transaccionDB.objectStore("Gente");
+                
+                var datosNuevos = { 
+                    clave: inpClave.value,
+                    titulo: inpTexto.value,
+                    fecha: inpFecha.value
+                };
+                
+                var regNuevo = almacenGente.add( datosNuevos );
+                regNuevo.addEventListener("success", fnMostrarRegistro, false);
+                
+                ClearInputs();
+            }
+            
+            function fnMostrarRegistro(){
+                var transaccionDB = oDB.transaction( "Gente", "readonly");
+                var almacenGente = transaccionDB.objectStore("Gente");
+                
+                var cursor = almacenGente.openCursor();
+                cursor.addEventListener( "success", fnMostrarRegistroCursor, false);
+            }
+            
+            function fnMostrarRegistroCursor(e){
+                var cursor = e.target.result;
+                if( cursor){
+                    ZonaDatos = document.getElementById("zonadatos");
+                    ZonaDatos.innerHTML += "<div>" + cursor.value.clave + " - " + cursor.value.titulo + " - " + cursor.value.fecha + "</div>";
+                    cursor.continue();
+                }
+            }
+            window.addEventListener("load", Init, false);
+        </script>
+            
+            
+    </head>
+    <body>
+        <h1>IndexedDB</h1>
+        <section>
+            <p>Clave:  <input type="text" id="clave" ></p>
+            <p>Titulo  <input type="text" id="texto" ></p>
+            <p>Fecha:    <input type="date" id="fecha" ></p>
+            <p><input type="button" id="Guardar" value="Grabar"></p>
+        </section>
+        <section id="zonadatos">
+            Datos almacén
+        </section>
+    </body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Archivos - Leer Archivo de texto - readAsText</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+        <style type="text/css">
+            #zonadatos{
+                width:500px;
+                height: 400px;
+                border: 1px solid red;
+            }
+        </style>
+        <script type="text/javascript">
+
+        function Init(){
+
+            var inpArchivos = document.getElementById("archivos");
+            inpArchivos.addEventListener("change", fnProcesarUpload, false);
+        }
+        function fnProcesarUpload(e){
+            var ListaArchivos = e.target.files;
+            var ArchivoSubido = ListaArchivos[0];
+
+            document.getElementById("zonadatos").innerHTML = "";
+            // Comprobar si es una imagen
+            if( !ArchivoSubido.type.match(/text/)){
+                alert("Seleccione un archivo de texto");
+                return;
+            }
+            // Creamos el lectos
+            var lector = new FileReader();
+
+            // Evento de lectura realizada
+            lector.addEventListener( "load", fnArhivoLeido, false);
+
+            var codeISO = "iso-8859-1";
+            // Leemos
+            lector.readAsText(ArchivoSubido, codeISO);
+        }
+        function fnArhivoLeido(e){
+            var valorLeido = e.target.result;
+            var zonadatos = document.getElementById("zonadatos");
+            zonadatos.innerHTML = valorLeido.replace(/\r\n/g, "<br/>");
+        }
+        window.addEventListener("load", Init, false);
+        </script>
+    </head>
+    <body>
+        <h1>Leer Archivo de texto</h1>
+        <h2>readAsText</h2>
+        <div id="contenedor">
+            <section id="zomaformulario">
+                <form name="formulario">
+                    <p>Archivos: <input type="file" name="archivos" id="archivos"> </p>
+                </form>
+            </section>
+        </div>
+        <section id="zonadatos">
+            No hay información
+        </section>
+    </body>
+</html>

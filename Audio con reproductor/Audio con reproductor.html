@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Audio</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style type="text/css">
+            #botones{
+                float:left;
+                width: 100px;
+                height: 20px;
+            }
+            #barra{
+                background: #FFF;
+                width: 600px;
+                height: 16px;
+                border: 1px solid #444;
+                margin-left: 80px;
+            }
+            #progreso{
+                position: absolute;
+                width: 0px;
+                height: 16px;
+                background-color: rgba( 0,0,150,2);
+            }
+        </style>
+          <script type="text/javascript">
+            var ReproductorAudio, reproducir, barra, progreso;
+            var maximo = 600;
+            function Init(){
+                ReproductorAudio = document.getElementById("ReproductorAudio");
+                btnReproducir = document.getElementById("btnReproducir");
+                barra = document.getElementById("barra");
+                progreso = document.getElementById("progreso");
+
+                btnReproducir.addEventListener("click", fnReproducir, false);
+                barra.addEventListener("click", fnMoverPosicion, false);
+            }
+            function fnReproducir(){
+                if( !ReproductorAudio.paused && !ReproductorAudio.ended){
+                    ReproductorAudio.pause();
+                    btnReproducir.innerHTML ="Play";
+                }
+                else{
+                    ReproductorAudio.play();
+                    btnReproducir.innerHTML ="Pause";
+                    bucle = setInterval( fnMostrarEstado, 50);
+                }
+            }
+            function fnMostrarEstado(){
+                if( !ReproductorAudio.ended){
+                    var total = parseInt(ReproductorAudio.currentTime * maximo / ReproductorAudio.duration);
+                    progreso.style.width = total + "px";
+                }
+            }
+            function fnMoverPosicion(posicion){
+                // cuidado Chrome resetea el currentTima al asignar un valor
+                if( !ReproductorAudio.pased && !ReproductorAudio.ended ){
+                    var ratonX = posicion.pageX - barra.offsetLeft;
+                    var nuevoTiempo = ratonX * ReproductorAudio.duration / maximo;
+                    ReproductorAudio.currentTime =parseInt(nuevoTiempo);
+                    progreso.style.width = ratonX + "px";
+                }
+            }
+            window.addEventListener("load", Init, false);
+         </script>
+    </head>
+    <body>
+        <audio id="ReproductorAudio" controls>
+            <source src="recursos/Audio1.mp3" >
+        </audio>
+
+        <nav>
+            <div id="botones">
+                <button type="button" id="btnReproducir">Play</button>
+            </div>
+            <div id="barra">
+                <div id="progreso"></div>
+            </div>
+        </nav>
+    </body>
+</html>
+

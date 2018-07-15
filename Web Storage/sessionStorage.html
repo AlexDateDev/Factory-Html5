@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Web Storage</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+        <style type="text/css">
+            #zonadatos{
+                width:300px;
+                height: 300px;
+                border: 1px solid red;
+            }
+        </style>
+        <script type="text/javascript">
+            function comenzar(){
+                var boton = document.getElementById("grabar");
+                boton.addEventListener("click",itemNuevo, false);
+            }
+            function itemNuevo(){
+                var clave = document.getElementById("clave").value;
+                var valor = document.getElementById("valor").value;
+                sessionStorage.setItem(clave, valor); /* Se guarda a nivel de pestaña */
+                leer_mostrar(clave);
+            }
+            function leer_mostrar(clave){
+                var zonadatos = document.getElementById("zonadatos");
+                var valor = sessionStorage.getItem(clave);
+                zonadatos.innerHTML = "Clave: " + clave + " - Valor: " + valor;
+            }
+            window.addEventListener("load", comenzar, false);
+        </script>
+
+
+    </head>
+    <body>
+        <section>
+            Clave: <input type="text" id="clave" ><br>
+            Valor:  <input type="text" id="valor" ><br>
+            <input type="button" id="grabar" value="Grabar">
+        </section>
+        <section id="zonadatos">
+            Al a espera de la lectura
+        </section>
+    </body>
+</html>
+

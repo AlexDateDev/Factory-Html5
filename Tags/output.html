@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Validaciones</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript">
+            var edad;
+
+            function comenzar(){
+                edad = document.getElementById("edad");
+                edad.addEventListener("change", cabiar_rango, false)
+
+            }
+            function cabiar_rango(){
+                var salida = document.getElementById("rango");
+                salida.innerHTML = edad.value;
+            }
+            window.addEventListener("load", comenzar, false);
+        </script>
+
+    </head>
+
+
+    <body>
+        <section>
+            <form name="datos_usuario" id="datos_usuario" method="get" >
+                Edad: <input type="range" name="edad" id="edad" min="0"  max="120" value="30"/>&nbsp;<output id="rango">30 </output><br />
+                <input type="submit" value="Enviar" id="enviar"/>
+            </form>
+        </section>
+
+    </body>
+</html>
+

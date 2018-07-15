@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Geolocalización</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript">
+            function comenzar(){
+                var miboton = document.getElementById("dame_ubicacion")
+                miboton.addEventListener("click", obtener, false);
+            }
+
+            function obtener(){
+                navigator.geolocation.getCurrentPosition(mostrar_posicion, gestion_errores);
+
+            }
+            function mostrar_posicion(posicion){
+                var ubicacion = document.getElementById("ubicacion");
+                var txt = "Latitud: " +  posicion.coords.latitude + "<br />";
+                txt += "Longitud: " +  posicion.coords.longitude + "<br />";
+                txt += "Exactitud: " +  posicion.coords.accuracy + "<br />";
+                ubicacion.innerHTML = txt;
+            }
+            function gestion_errores(error){
+                alert("Ha habido un error: (" + error.code + ") = " + error.message);
+            }
+            window.addEventListener("load", comenzar, false);
+        </script>
+    </head>
+    <body>
+        <section id="ubicacion">
+            <button id="dame_ubicacion">Mi ubicación</button>
+        </section>
+    </body>
+</html>
+
